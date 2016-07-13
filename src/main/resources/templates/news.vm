@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<pre>
+    $!{value1}
+    #foreach ($color in $colors)
+        Color $!{foreach.count}/$!{foreach.index} : $!{color}
+    #end
+
+    #foreach ($key in $map.keySet())
+        Color2 $!{foreach.count}/$!{foreach.index} : $!{key} $map.get($key)
+    #end
+
+    $!{user.name}
+    $!{user.getName()}
+    #set ($title = "testTitle")
+    Include: #include("header.vm")## 纯文本包含
+    Parse: #parse("header.vm") ##会解析变量
+##---预定义函数--
+    #macro(render_color,$color, $index)
+    Color by macro $index1 ,$color1
+    #end
+
+    #foreach($color in $colors)
+        #render_color($color, $foreach.index)
+    #end
+</pre>
+
+</body>
+</html>

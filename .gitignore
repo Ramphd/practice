@@ -12,3 +12,7 @@
 hs_err_pid*
 .idea/*
 target/
+/pom.xml
+/mvnw
+/mvnw.cmd
+/practice.iml

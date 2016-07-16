@@ -23,7 +23,7 @@ public class InitDatabaseTests {
     @Autowired
     UserDao userDao;
     //因为Mybatis注入属于动态注入，所以静态检查并不能确定，
-    // 会显示成问题，将Mapper改成Service就可以静态检查到
+    // 会显示成error，将Mapper改成Service就可以静态检查到
     @Autowired
     NewsDao newsDao;
     //例如Intellij会对Spring的bean做检查，如果在xml或者注解里引用了不存在的bean，

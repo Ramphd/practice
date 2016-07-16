@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+        <!--通过xml的方式进行配置sql操作可以进行复制操作-->
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="work.liyue.dao.NewsDao">
     <sql id="table">news</sql>
     <sql id="selectFields">id,title, link, image, like_count, comment_count,created_date,user_id
     </sql>
+    <!-- id是方法名，resultType是类路径-->
     <select id="selectByUserIdAndOffset" resultType="work.liyue.model.News">
         SELECT
         <include refid="selectFields"/>

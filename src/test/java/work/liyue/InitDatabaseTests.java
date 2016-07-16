@@ -1,6 +1,5 @@
 package work.liyue;
 
-
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -27,7 +26,7 @@ public class InitDatabaseTests {
     @Autowired
     NewsDao newsDao;
     //例如Intellij会对Spring的bean做检查，如果在xml或者注解里引用了不存在的bean，
-    // 它会出错误提示，但是实际上我们的bean是runtime生成的(例如iBatis的dao)，这个时候它还会提示error
+    //它会出错误提示，但是实际上我们的bean是runtime生成的(例如iBatis的dao)，这个时候它还会提示error
     @Test
     public void initData() {
         Random random = new Random();

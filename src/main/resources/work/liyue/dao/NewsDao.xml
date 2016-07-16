@@ -9,7 +9,7 @@
     <!-- id是方法名，resultType是类路径-->
     <select id="selectByUserIdAndOffset" resultType="work.liyue.model.News">
         SELECT
-        <include refid="selectFields"/>
+        <include refid="selectFields"/><!--上面有注释，参数配置-->
         FROM
         <include refid="table"/>
 

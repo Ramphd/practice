@@ -7,8 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import work.liyue.dao.LoginTicketDao;
 import work.liyue.dao.NewsDao;
 import work.liyue.dao.UserDao;
+import work.liyue.model.LoginTicket;
 import work.liyue.model.News;
 import work.liyue.model.User;
 
@@ -25,6 +27,9 @@ public class InitDatabaseTests {
     // 会显示成error，将Mapper改成Service就可以静态检查到
     @Autowired
     NewsDao newsDao;
+    @Autowired
+    LoginTicketDao loginTicketDao;
+
     //例如Intellij会对Spring的bean做检查，如果在xml或者注解里引用了不存在的bean，
     //它会出错误提示，但是实际上我们的bean是runtime生成的(例如iBatis的dao)，这个时候它还会提示error
     @Test
@@ -41,23 +46,33 @@ public class InitDatabaseTests {
             News news = new News();
             news.setCommentCount(i);
             Date date = new Date();
-            date.setTime(date.getTime() + 1000*3600*5*i);
+            date.setTime(date.getTime() + 1000 * 3600 * 5 * i);
             news.setCreatedDate(date);
             news.setImage(String.format("http://images.nowcoder.com/head/%dm.png", random.nextInt(1000)));
-            news.setLikeCount(i+1);
-            news.setUserId(i+1);
+            news.setLikeCount(i + 1);
+            news.setUserId(i + 1);
             news.setTitle(String.format("TITLE{%d}", i));
             news.setLink(String.format("http://www.nowcoder.com/%d.html", i));
             newsDao.addNews(news);
 
             user.setPassword("newpassword");
             userDao.updatePassword(user);
+
+            LoginTicket ticket = new LoginTicket();
+            ticket.setStatus(0);
+            ticket.setUserId(i + 1);
+            ticket.setExpired(date);
+            ticket.setTicket(String.format("TICKET%d", i + 1));
+            loginTicketDao.addTicket(ticket);
+
+            loginTicketDao.updateStatus(ticket.getTicket(), 2);
         }
 
         Assert.assertEquals("newpassword", userDao.selectById(1).getPassword());
         userDao.deleteById(1);
         Assert.assertNull(userDao.selectById(1));
-
+        Assert.assertEquals(1, loginTicketDao.selectByTicket("TICKET1").getUserId());
+        Assert.assertEquals(2, loginTicketDao.selectByTicket("TICKET1").getStatus());
     }
 
 }

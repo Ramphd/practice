@@ -20,9 +20,10 @@ public class PracticeConfiguration extends WebMvcAutoConfiguration.WebMvcAutoCon
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
+        //注册有先后顺序，对拦截有影响。和AOP的思路一致，在某个节点进行拦截。
         registry.addInterceptor(passportInterceptor);
-        //对专门一个路径请求做拦截
-        registry.addInterceptor(loginRequiredInterceptor).addPathPatterns("/setting*");
+        //对专门一个路径请求做拦截,要有拦截效果首先必须有对应的controller才可以，不然就是error
+        registry.addInterceptor(loginRequiredInterceptor).addPathPatterns("/setting/**");
         super.addInterceptors(registry);
     }
 }

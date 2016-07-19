@@ -3,16 +3,16 @@ package work.liyue.controller;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import work.liyue.model.HostHolder;
 import work.liyue.model.News;
+import work.liyue.model.ViewObject;
 import work.liyue.service.NewsService;
 import work.liyue.service.QiniuService;
+import work.liyue.service.UserService;
 import work.liyue.util.PracticeUtil;
 
 import javax.servlet.http.HttpServletResponse;
@@ -31,16 +31,41 @@ public class NewsController {
     QiniuService qiniuService;
     @Autowired
     HostHolder hostHolder;
+    @Autowired
+    UserService userService;
     private static final org.slf4j.Logger logger = LoggerFactory.getLogger(NewsController.class);
+
+    @RequestMapping(path = {"/news/{newsId}"}, method = {RequestMethod.GET})
+    public String newsDetail(@PathVariable("newsId") int newsId , Model model){
+        try {
+            News news = newsService.getById(newsId);
+//            if (news != null) {
+//                List<Comment> comments = commentService.getCommentsByEntity(news.getId(), EntityType.ENTITY_NEWS);
+//                List<ViewObject> commentVOs = new ArrayList<ViewObject>();
+//                for (Comment comment : comments) {
+//                    ViewObject commentVO = new ViewObject();
+//                    commentVO.set("comment", comment);
+//                    commentVO.set("user", userService.getUser(comment.getUserId()));
+//                    commentVOs.add(commentVO);
+//                }
+//                model.addAttribute("comments", commentVOs);
+//            }
+            model.addAttribute("news", news);
+            model.addAttribute("owner", userService.getUser(news.getUserId()));
+        } catch (Exception e) {
+            logger.error("获取资讯明细错误" + e.getMessage());
+        }
+        return "detail";
+    }
 
     @RequestMapping(path = {"/uploadImage/"}, method = {RequestMethod.POST})
     @ResponseBody
     //核心@RequestParam("file") MultipartFile file
     public String uploadImage(@RequestParam("file") MultipartFile file) {
-
         try {
             String fileUrl = newsService.saveImage(file);
-            //String fileUrl = qiniuService.saveImage(file);
+            //上传到七牛云
+            // String fileUrl = qiniuService.saveImage(file);
 
             if (fileUrl == null) {
                 return PracticeUtil.getJSONString(1, "上传图片失败");

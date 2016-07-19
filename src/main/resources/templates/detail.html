@@ -62,6 +62,8 @@
 
             <div class="post-comment-form">
                 #if($user)
+                <span>评论 ($!{hostHolder})</span>
+                <span>评论 ($!{user})</span>
                 <span>评论 ($!{news.commentCount})</span>
                 <form method="post" action="/addComment">
                   <div class="form-group text required comment_content">

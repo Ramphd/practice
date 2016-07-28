@@ -42,7 +42,7 @@ public class MessageController {
     public String conversationDetail(Model model) {
         try {
             int localUserId = hostHolder.getUser().getId();
-            List<ViewObject> conversations = new ArrayList<ViewObject>();
+            List<ViewObject> conversations = new ArrayList<>();
             List<Message> conversationList = messageService.getConversationList(localUserId, 0, 10);
             for (Message msg : conversationList) {
                 ViewObject vo = new ViewObject();
@@ -59,7 +59,6 @@ public class MessageController {
         }
         return "letter";
     }
-
 
     @RequestMapping(path = {"/msg/detail"}, method = {RequestMethod.GET})
     public String conversationDetail( @Param("conversationId") String conversationId,Model model) {
@@ -90,6 +89,7 @@ public class MessageController {
                              @RequestParam("toId") int toId,
                              @RequestParam("content") String content) {
         try {
+            //new String("adasdas").compareTo("asdasdasd");
             Message msg = new Message();
             msg.setContent(content);
             msg.setFromId(fromId);

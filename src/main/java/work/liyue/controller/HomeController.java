@@ -7,8 +7,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import work.liyue.model.EntityType;
+import work.liyue.model.HostHolder;
 import work.liyue.model.News;
 import work.liyue.model.ViewObject;
+import work.liyue.service.LikeService;
 import work.liyue.service.NewsService;
 import work.liyue.service.UserService;
 
@@ -26,15 +29,25 @@ public class HomeController {
     private NewsService newsService;
     @Autowired
     private UserService userService;
+    @Autowired
+    LikeService likeService;
+    @Autowired
+    HostHolder hostHolder;
 
     private List<ViewObject> getNews(int userId, int offset, int limit) {
         List<News> newsList = newsService.getLastestNews(userId, offset, limit);
         List<ViewObject> vos = new ArrayList<>();
-
+        int localUserId = hostHolder.getUser() != null ? hostHolder.getUser().getId() : 0;
         for (News news : newsList) {
             ViewObject vo = new ViewObject();
             vo.set("news", news);
             vo.set("user", userService.getUser(news.getUserId()));
+            if (localUserId != 0) {
+                vo.set("like", likeService.getLikeStatus(localUserId, EntityType.ENTITY_NEWS, news.getId()));
+            } else {
+                vo.set("like", 0);
+            }
+
             vos.add(vo);
         }
         return vos;
